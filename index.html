@@ -23,6 +23,9 @@
         .scrollbar-thin::-webkit-scrollbar-thumb { background: #fca5a5; border-radius: 2px; }
         /* リスト表示のパフォーマンス向上 */
         .content-visibility-auto { content-visibility: auto; contain-intrinsic-size: 100px 1000px; }
+        /* アニメーション用 */
+        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
+        .animate-blob { animation: blob 7s infinite; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -723,7 +726,7 @@ window.WORD_LIST=[
 // グローバル状態管理
 const App = {
     mode: 'START',
-    range: { start: 1, end: 100 },
+    ranges: [{ start: 1, end: 100 }], // 複数範囲に対応
     queue: [],
     currentIndex: 0,
     score: 0,
@@ -750,7 +753,8 @@ window.initApp = function() {
             App.wordList = EMERGENCY_DATA;
         }
 
-        App.range.end = Math.min(100, App.wordList.length);
+        // 初期範囲の終了値を調整
+        App.ranges[0].end = Math.min(100, App.wordList.length);
         
         // 苦手単語リストの読み込み
         loadSavedMistakes();
@@ -846,13 +850,20 @@ function postRender() {
         const input = document.getElementById('type-input');
         if (input) {
             input.focus();
-            // Enterキーでの送信処理（IME変換中は無視）
             input.onkeydown = (e) => {
                 if (e.key === 'Enter' && !e.isComposing) {
                     e.preventDefault();
                     checkTyping();
                 }
             };
+        }
+    }
+    // リスト画面の検索入力欄フォーカス維持
+    if (App.mode === 'LIST') {
+        const searchInput = document.getElementById('search-input');
+        if(searchInput && document.activeElement !== searchInput && App.searchTerm) {
+             // 簡易的なフォーカス復帰（部分更新により基本的には不要だが念のため）
+             // searchInput.focus(); 
         }
     }
 }
@@ -864,6 +875,16 @@ function viewStart() {
     const mistakeWords = App.wordList.filter(w => App.savedMistakes.has(w.id));
     const savedCount = mistakeWords.length;
     
+    // 範囲入力欄の生成
+    const rangeInputs = App.ranges.map((r, i) => `
+        <div class="flex items-center justify-center gap-2 mb-2 animate-fadeIn">
+            <input type="number" value="${r.start}" oninput="updateRange(${i}, 'start', this.value)" class="w-24 p-3 border-2 border-purple-300 bg-purple-50 rounded-xl text-center font-black text-xl text-black focus:border-purple-500 focus:bg-white outline-none transition shadow-sm" min="1" max="${total}">
+            <span class="text-purple-300 font-bold text-xl">~</span>
+            <input type="number" value="${r.end}" oninput="updateRange(${i}, 'end', this.value)" class="w-24 p-3 border-2 border-purple-300 bg-purple-50 rounded-xl text-center font-black text-xl text-black focus:border-purple-500 focus:bg-white outline-none transition shadow-sm" min="1" max="${total}">
+            ${App.ranges.length > 1 ? `<button onclick="removeRange(${i})" class="w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-600 bg-red-50 rounded-full transition">✕</button>` : `<div class="w-8"></div>`}
+        </div>
+    `).join('');
+
     return `
     <div class="max-w-4xl mx-auto px-4 py-8 space-y-8 fade-in pt-24">
         <div class="text-center space-y-2">
@@ -917,11 +938,13 @@ function viewStart() {
             <h2 class="font-bold text-slate-700 mb-4 text-center flex items-center justify-center gap-2">
                 <span>🎯</span> 学習範囲 (ID指定)
             </h2>
-            <div class="flex items-center justify-center gap-4 mb-6">
-                <input type="number" id="range-start" value="${App.range.start}" class="w-24 p-3 border-2 border-purple-300 bg-purple-50 rounded-xl text-center font-black text-xl text-black focus:border-purple-500 focus:bg-white outline-none transition shadow-sm" min="1" max="${total}">
-                <span class="text-purple-300 font-bold text-xl">~</span>
-                <input type="number" id="range-end" value="${App.range.end}" class="w-24 p-3 border-2 border-purple-300 bg-purple-50 rounded-xl text-center font-black text-xl text-black focus:border-purple-500 focus:bg-white outline-none transition shadow-sm" min="1" max="${total}">
+            <div id="range-container">
+                ${rangeInputs}
             </div>
+            <div class="text-center mb-6">
+                <button onclick="addRange()" class="text-sm font-bold text-indigo-500 hover:text-indigo-700 hover:bg-indigo-50 px-4 py-2 rounded-full transition">+ 範囲を追加</button>
+            </div>
+            
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="setRange(1, Math.min(100, ${total}))" class="bg-slate-50 text-slate-600 px-3 py-2 rounded-lg text-sm font-bold hover:bg-slate-100 transition">Part 1 (1-100)</button>
                 <button onclick="setRange(1, ${total})" class="bg-indigo-50 text-indigo-600 px-3 py-2 rounded-lg text-sm font-bold hover:bg-indigo-100 transition">全範囲</button>
@@ -997,11 +1020,9 @@ function viewStart() {
 
 function viewList() {
     const list = App.wordList;
-    // リスト表示では範囲指定を無視して全件対象にする
     const term = App.searchTerm ? App.searchTerm.toLowerCase() : '';
     
     const filtered = list.filter(w => {
-        // 検索語句があればフィルタリング、なければ全件
         const matches = !term || w.en.toLowerCase().includes(term) || w.ja.includes(term) || w.id.toString().includes(term);
         return matches;
     });
@@ -1042,7 +1063,6 @@ function viewQuiz() {
     const word = App.queue[App.currentIndex];
     if (!word) return '<div class="text-center p-8 mt-20 text-red-500 font-bold">エラー: 出題データがありません</div>';
 
-    // 復習モードかどうか
     const isReview = App.quizType === 'REVIEW';
     const isTyping = App.quizType.startsWith('TYPING') || App.quizType === 'TEST_TYPING'; 
     const isTest = App.quizType === 'TEST_TYPING';
@@ -1050,9 +1070,6 @@ function viewQuiz() {
     const modeBadge = isReview 
         ? `<div class="inline-block px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold mb-4">🔥 苦手克服モード</div>` 
         : isTest ? `<div class="inline-block px-3 py-1 bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold mb-4">🎓 実力テスト中</div>` : '';
-
-    // 英語の表示制御（タイピングモードなら隠す）
-    // タイピング時は上部のカードごと非表示にするため displayWord は使用しない
 
     let interaction = '';
     if (isTyping) {
@@ -1066,7 +1083,6 @@ function viewQuiz() {
             <button onclick="checkTyping()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg hover:bg-indigo-700 hover:shadow-indigo-200 hover:-translate-y-0.5 transition active:scale-95">回答する</button>
         </div>`;
     } else {
-        // 4択生成
         const list = App.wordList;
         let choices = [word];
         let safetyCount = 0;
@@ -1148,11 +1164,24 @@ function viewResult() {
 
 // --- アクション ---
 
+window.addRange = () => {
+    App.ranges.push({start: 1, end: 100});
+    render();
+};
+
+window.removeRange = (index) => {
+    if (App.ranges.length <= 1) return;
+    App.ranges.splice(index, 1);
+    render();
+};
+
+window.updateRange = (index, key, val) => {
+    App.ranges[index][key] = parseInt(val) || 0;
+};
+
 window.setRange = (s, e) => {
-    const sEl = document.getElementById('range-start');
-    const eEl = document.getElementById('range-end');
-    if(sEl) sEl.value = s;
-    if(eEl) eEl.value = e;
+    App.ranges = [{start: s, end: e}];
+    render();
 };
 
 window.onSearch = (val) => {
@@ -1209,17 +1238,15 @@ window.manualRemoveMistake = (id) => {
 };
 
 window.startList = () => {
-    parseRange();
     App.mode = 'LIST';
     render();
 };
 
 window.startQuiz = (type) => {
-    parseRange();
     const list = App.wordList;
-    const s = parseInt(App.range.start);
-    const e = parseInt(App.range.end);
-    const targets = list.filter(w => w.id >= s && w.id <= e);
+    const targets = list.filter(w => {
+        return App.ranges.some(r => w.id >= r.start && w.id <= r.end);
+    });
     
     if (!targets.length) {
         alert('指定された範囲に単語がありません。\n範囲を変更してください。');
@@ -1243,14 +1270,13 @@ window.startQuiz = (type) => {
 };
 
 window.startTest = () => {
-    parseRange();
     const countInput = document.getElementById('test-count');
     const count = parseInt(countInput ? countInput.value : 10) || 10;
     
     const list = App.wordList;
-    const s = parseInt(App.range.start);
-    const e = parseInt(App.range.end);
-    const targets = list.filter(w => w.id >= s && w.id <= e);
+    const targets = list.filter(w => {
+        return App.ranges.some(r => w.id >= r.start && w.id <= r.end);
+    });
     
     if (targets.length < count) {
         alert(`指定範囲の単語数(${targets.length}語)が、出題数(${count}問)より少ないです。\n出題数を減らすか、範囲を広げてください。`);
@@ -1377,15 +1403,6 @@ window.speak = (id) => {
     }
 };
 
-function parseRange() {
-    const s = document.getElementById('range-start');
-    const e = document.getElementById('range-end');
-    if (s && e) {
-        App.range.start = parseInt(s.value) || 1;
-        App.range.end = parseInt(e.value) || 100;
-    }
-}
-
 function nextStep() {
     if (App.currentIndex < App.queue.length - 1) {
         App.currentIndex++;
@@ -1446,3 +1463,4 @@ if (document.readyState === 'loading') {
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>
+    
