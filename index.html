@@ -864,27 +864,23 @@
       // Scramble: Grammar (語法)
       const DATA_GRAMMAR = [
         {ID:1, group:'GRAMMAR', cat:'語法', en:'allow', jp:'許可する', sent:'Please ___ me to introduce myself.', choices:['allow','forgive','let','make'], trans:'自己紹介させてください。'},
-        {ID:2, group:'GRAMMAR', cat:'語法', en:'suggest', jp:'提案する', sent:'He ___ that we go to the park.', choices:['suggested','wanted','hoped','liked'], trans:'彼は公園に行こうと提案した。'},
-        ...Array.from({length:10}, (_,i)=>({ID:3+i, group:'GRAMMAR', cat:'語法', en:`grammar${i}`, jp:`語法${i}`, sent:`This is a ___ sentence.`, choices:[`grammar${i}`, 'wrong', 'bad', 'good'], trans:`これは語法${i}の文です。`}))
+        {ID:2, group:'GRAMMAR', cat:'語法', en:'suggest', jp:'提案する', sent:'He ___ that we go to the park.', choices:['suggested','wanted','hoped','liked'], trans:'彼は公園に行こうと提案した。'}
       ];
 
       // Scramble: Vocabulary (語い)
       const DATA_VOCAB = [
-        {ID:1, group:'VOCAB', cat:'語い', en:'fare', jp:'運賃', sent:'The bus ___ is 200 yen.', choices:['fare','fee','charge','price'], trans:'バスの運賃は200円だ。'},
-        ...Array.from({length:10}, (_,i)=>({ID:2+i, group:'VOCAB', cat:'語い', en:`vocab${i}`, jp:`語い${i}`, sent:`This is a ___ sentence.`, choices:[`vocab${i}`, 'wrong', 'bad', 'good'], trans:`これは語い${i}の文です。`}))
-      ];
+        {ID:1, group:'VOCAB', cat:'語い', en:'fare', jp:'運賃', sent:'The bus ___ is 200 yen.', choices:['fare','fee','charge','price'], trans:'バスの運賃は200円だ。'}
+        ];
 
       // Scramble: Idiom (イディオム)
       const DATA_IDIOM = [
-        {ID:1, group:'IDIOM', cat:'イディオム', en:'run out of', jp:'使い果たす', sent:'We have ___ gas.', choices:['run out of','run away','run into','run over'], trans:'ガソリンを使い果たした。'},
-        ...Array.from({length:10}, (_,i)=>({ID:2+i, group:'IDIOM', cat:'イディオム', en:`idiom${i}`, jp:`熟語${i}`, sent:`This is a ___ sentence.`, choices:[`idiom${i}`, 'wrong', 'bad', 'good'], trans:`これは熟語${i}の文です。`}))
-      ];
+        {ID:1, group:'IDIOM', cat:'イディオム', en:'run out of', jp:'使い果たす', sent:'We have ___ gas.', choices:['run out of','run away','run into','run over'], trans:'ガソリンを使い果たした。'}
+       ];
 
       // Scramble: Conversation (会話表現)
       const DATA_CONVERSATION = [
-        {ID:1, group:'CONVERSATION', cat:'会話表現', en:'No way', jp:'まさか', sent:'"I won the lottery." "___!"', choices:['No way','Yes way','Good','Bad'], trans:'「宝くじ当たったよ」「まさか！」'},
-        ...Array.from({length:10}, (_,i)=>({ID:2+i, group:'CONVERSATION', cat:'会話表現', en:`chat${i}`, jp:`会話${i}`, sent:`This is a ___ sentence.`, choices:[`chat${i}`, 'wrong', 'bad', 'good'], trans:`これは会話${i}の文です。`}))
-      ];
+        {ID:1, group:'CONVERSATION', cat:'会話表現', en:'No way', jp:'まさか', sent:'"I won the lottery." "___!"', choices:['No way','Yes way','Good','Bad'], trans:'「宝くじ当たったよ」「まさか！」'}
+        ];
 
       // --- STORE ---
       const Store = {
