@@ -195,9 +195,9 @@
 
       // --- DATA SEED (6 Independent Sources) ---
       
-      // LEAP Data
+      // LEAP Data (Abbreviated for brevity in this block, preserving structure)
       const RAW_LEAP = [
-       {id:1,en:"agree",ja:"賛成する，意見が一致する，（with~）合う"},{id:2,en:"oppose",ja:"に反対する"},{id:3,en:"advise",ja:"忠告する"},{id:4,en:"tip",ja:"助言，ヒント，チップ，（足や山などの）先，先端"},
+      {id:1,en:"agree",ja:"賛成する，意見が一致する，（with~）合う"},{id:2,en:"oppose",ja:"に反対する"},{id:3,en:"advise",ja:"忠告する"},{id:4,en:"tip",ja:"助言，ヒント，チップ，（足や山などの）先，先端"},
 {id:5,en:"discuss",ja:"について話し合う，議論する，話題に出す"},{id:6,en:"blame",ja:"〜に責任があるとする"},{id:7,en:"argue",ja:"(that S V)〜と主張する，（with~）言い争う"},
 {id:8,en:"claim",ja:"(that S V)〜と主張する，〜を要求する，〜を主張する，主張，要求"},{id:9,en:"complain",ja:"文句を言う，苦情を言う，（of~）訴える"},{id:10,en:"offer",ja:"〜を申し出る，申し出，値引き"},
 {id:11,en:"suggest",ja:"〜を示唆する，〜を提案する"},{id:12,en:"recommend",ja:"〜を推薦する，勧める"},{id:13,en:"grateful",ja:"感謝している"},
@@ -863,26 +863,26 @@
 
       // Scramble: Grammar (語法)
       const DATA_GRAMMAR = [
-        {ID:474, group:'GRAMMAR', cat:'語法', en:'discuss', jp:'について議論する', sent:'We have to ___ the current human rights problems as soon as possible', choices:['discuss with','discuss on','discuss','discuss about'], trans:'私たちは現在の人権問題についてできるだけ早く議論しなければならない．'},
-        {ID:475, group:'GRAMMAR', cat:'語法', en:'marry', jp:'と結婚する', sent:'Paul ___ my friend Jane last year.', choices:['married','got married','married to','married with'], trans:'ポールは私の友達のジェーンと去年結婚した．'},
-        {ID:476, group:'GRAMMAR', cat:'語法', en:'resemble', jp:'に似ている', sent:'The girl closely ___ my dead mother', choices:['resembles','resemble of','resemble to','resemble with'], trans:'その少女は私の亡き母にそっくりだ．'},
-     　　{ID:477, group:'GRAMMAR', cat:'語法', en:'attend', jp:'に出席する，通う', sent:'Over three thousand people ___ the concert.', choices:['participated','gathered','listened','attended'], trans:'コンサートには3千人以上の人たちが聴きに来た．'}
-        {ID:478, group:'GRAMMAR', cat:'語法', en:'aplogize to A for B', jp:'AにBのことで謝る', sent:'Will you apologize ___ ?', choices:['what I have done for him','him what I have done','to him for what I have done','him for what I have done'], trans:'私がやってしまったことを彼に謝ってくれませんか？'}
+        {ID:474, group:'GRAMMAR', cat:'語法', en:'discuss', jp:'について議論する', sent:'We have to ___ the current human rights problems as soon as possible', choices:['discuss with','discuss on','discuss','discuss about'], answer:'discuss', trans:'私たちは現在の人権問題についてできるだけ早く議論しなければならない．'},
+        {ID:475, group:'GRAMMAR', cat:'語法', en:'marry', jp:'と結婚する', sent:'Paul ___ my friend Jane last year.', choices:['married','got married','married to','married with'], answer:'married', trans:'ポールは私の友達のジェーンと去年結婚した．'},
+        {ID:476, group:'GRAMMAR', cat:'語法', en:'resemble', jp:'に似ている', sent:'The girl closely ___ my dead mother', choices:['resembles','resemble of','resemble to','resemble with'], answer:'resembles', trans:'その少女は私の亡き母にそっくりだ．'},
+        {ID:477, group:'GRAMMAR', cat:'語法', en:'attend', jp:'に出席する，通う', sent:'Over three thousand people ___ the concert.', choices:['participated','gathered','listened','attended'], answer:'attended', trans:'コンサートには3千人以上の人たちが聴きに来た．'},
+        {ID:478, group:'GRAMMAR', cat:'語法', en:'aplogize to A for B', jp:'AにBのことで謝る', sent:'Will you apologize ___ ?', choices:['what I have done for him','him what I have done','to him for what I have done','him for what I have done'], answer:'to him for what I have done', trans:'私がやってしまったことを彼に謝ってくれませんか？'}
       ];
 
       // Scramble: Vocabulary (語い)
       const DATA_VOCAB = [
-        {ID:1, group:'VOCAB', cat:'語い', en:'fare', jp:'運賃', sent:'The bus ___ is 200 yen.', choices:['fare','fee','charge','price'], trans:'バスの運賃は200円だ。'}
+        {ID:1, group:'VOCAB', cat:'語い', en:'fare', jp:'運賃', sent:'The bus ___ is 200 yen.', choices:['fare','fee','charge','price'], answer:'fare', trans:'バスの運賃は200円だ。'}
         ];
 
       // Scramble: Idiom (イディオム)
       const DATA_IDIOM = [
-        {ID:1, group:'IDIOM', cat:'イディオム', en:'run out of', jp:'使い果たす', sent:'We have ___ gas.', choices:['run out of','run away','run into','run over'], trans:'ガソリンを使い果たした。'}
+        {ID:1, group:'IDIOM', cat:'イディオム', en:'run out of', jp:'使い果たす', sent:'We have ___ gas.', choices:['run out of','run away','run into','run over'], answer:'run out of', trans:'ガソリンを使い果たした。'}
        ];
 
       // Scramble: Conversation (会話表現)
       const DATA_CONVERSATION = [
-        {ID:1, group:'CONVERSATION', cat:'会話表現', en:'No way', jp:'まさか', sent:'"I won the lottery." "___!"', choices:['No way','Yes way','Good','Bad'], trans:'「宝くじ当たったよ」「まさか！」'}
+        {ID:1, group:'CONVERSATION', cat:'会話表現', en:'No way', jp:'まさか', sent:'"I won the lottery." "___!"', choices:['No way','Yes way','Good','Bad'], answer:'No way', trans:'「宝くじ当たったよ」「まさか！」'}
         ];
 
       // --- STORE ---
@@ -1069,12 +1069,17 @@
           const normalizedAns = String(ans).trim();
 
           if (q.type === 'FILL') {
-             // For Scramble, choices[0] is correct, or match 'en'
-             correctAnswer = item.choices ? item.choices[0] : item.en;
+             // Use explicit answer if available, otherwise choices[0] or en
+             if (item.answer) {
+                 correctAnswer = item.answer;
+             } else {
+                 correctAnswer = item.choices ? item.choices[0] : item.en;
+             }
+             
              // Compare
              isCorrect = (normalizedAns === String(correctAnswer).trim());
-             if(!isCorrect && item.en) {
-                // Fallback check against 'en' property if choices didn't match
+             if(!isCorrect && !item.answer && item.en) {
+                // Fallback check against 'en' property if answer wasn't explicit and choices didn't match
                 isCorrect = (normalizedAns.toLowerCase() === item.en.toLowerCase().trim());
              }
           } else if (q.mode === 'EN_JA') {
@@ -1488,7 +1493,7 @@
         const hist = Store.getHistory();
 
         h += `<div style="text-align:right; margin-bottom:0.5rem;"><button class="btn btn-sm btn-primary" onclick="window.app.exportCSV('SUMMARY')">CSVダウンロード</button></div>`;
-        h += `<table class="word-table stats-summary-table"><thead><tr><th>日時</th><th>機能</th><th>数</th><th>正答率</th></tr></thead><tbody>`;
+        h += `<table class="word-table stats-summary-table"><thead><tr><th>日付</th><th>機能</th><th>問題数</th><th>正答率</th></tr></thead><tbody>`;
         hist.forEach((row, idx) => {
             h += `<tr onclick="window.app.showStatDetail(${idx})"><td>${row.date}</td><td>${row.func}</td><td>${row.count}</td><td style="font-weight:bold; color:var(--primary)">${row.rate}</td></tr>`;
         });
