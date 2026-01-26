@@ -889,19 +889,6 @@
 {id:1934,en:"namely",ja:"すなわち"},{id:1935,en:"whereas",ja:"〜だが一方"}
       ];
       
-      // GENERATE LEAP DATA (1-1935)
-      const DATA_LEAP = [];
-      const leapMap = new Map(LEAP_SAMPLES.map(d => [d.id, d]));
-      for (let i = 1; i <= 1935; i++) {
-        if (leapMap.has(i)) {
-            const d = leapMap.get(i);
-            DATA_LEAP.push({ID: d.id, en: d.en, jp: d.ja, group: 'LEAP'});
-        } else {
-            // Placeholder to ensure functionality for full 1935 items
-            DATA_LEAP.push({ID: i, en: `leap_word_${i}`, jp: `[単語ID:${i}の意味]`, group: 'LEAP'});
-        }
-      }
-
       // TARGET SAMPLES
             const DATA_TARGET = [
 {ID:1,en:"create",jp:"を創り出す，を引き起こす",group:"単語②"},
