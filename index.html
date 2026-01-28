@@ -218,31 +218,11 @@
     (function() {
       'use strict';
 
-      // --- DATA SEED ---
-      // (Data removed for brevity, assuming previous large data block is present)
-      // LEAP SAMPLES
-      const LEAP_SAMPLES = [
-       {id:1,en:"agree",ja:"賛成する，意見が一致する，（with~）合う"},
-       // ... (Rest of LEAP_SAMPLES as provided previously)
-       {id:1935,en:"whereas",ja:"〜だが一方"}
-      ];
+      
       
       // GENERATE LEAP DATA (1-1935)
-      const DATA_LEAP = [];
-      const leapMap = new Map(LEAP_SAMPLES.map(d => [d.id, d]));
-      for (let i = 1; i <= 1935; i++) {
-        if (leapMap.has(i)) {
-            const d = leapMap.get(i);
-            DATA_LEAP.push({ID: d.id, en: d.en, jp: d.ja, group: 'LEAP'});
-        } else {
-            // Placeholder to ensure functionality for full 1935 items
-            DATA_LEAP.push({ID: i, en: `leap_word_${i}`, jp: `[単語ID:${i}の意味]`, group: 'LEAP'});
-        }
-      }
-
-      // TARGET SAMPLES
-      const TARGET_SAMPLES = [
-       {id:1,en:"agree",ja:"賛成する，意見が一致する，（with~）合う"},{id:2,en:"oppose",ja:"に反対する"},{id:3,en:"advise",ja:"忠告する"},{id:4,en:"tip",ja:"助言，ヒント，チップ，（足や山などの）先，先端"},
+      const DATA_LEAP = [
+        {id:1,en:"agree",ja:"賛成する，意見が一致する，（with~）合う"},{id:2,en:"oppose",ja:"に反対する"},{id:3,en:"advise",ja:"忠告する"},{id:4,en:"tip",ja:"助言，ヒント，チップ，（足や山などの）先，先端"},
 {id:5,en:"discuss",ja:"について話し合う，議論する，話題に出す"},{id:6,en:"blame",ja:"〜に責任があるとする"},{id:7,en:"argue",ja:"(that S V)〜と主張する，（with~）言い争う"},
 {id:8,en:"claim",ja:"(that S V)〜と主張する，〜を要求する，〜を主張する，主張，要求"},{id:9,en:"complain",ja:"文句を言う，苦情を言う，（of~）訴える"},{id:10,en:"offer",ja:"〜を申し出る，申し出，値引き"},
 {id:11,en:"suggest",ja:"〜を示唆する，〜を提案する"},{id:12,en:"recommend",ja:"〜を推薦する，勧める"},{id:13,en:"grateful",ja:"感謝している"},
